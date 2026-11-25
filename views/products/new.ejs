@@ -1,0 +1,139 @@
+
+<% layout('/layouts/boilerplate') %>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-dark text-white p-4">
+                    <h3 class="mb-1">Add New Product</h3>
+                    <p class="mb-0 text-white-50">
+                        Enter product details to add to your store.
+                    </p>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <form action="/products" method="POST" enctype="multipart/form-data">
+
+                        
+                        <!-- Product Name -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Product Name
+                            </label>
+                            <input
+                                type="text"
+                                name="name"
+                                class="form-control"
+                                placeholder="Enter product name"
+                                required
+                            >
+                        </div>
+
+                        <!-- Product image -->
+                       <div class="input-group mb-3">
+  <label class="input-group-text" for="inputGroupFile01">Upload</label>
+  <input type="file" class="form-control" id="inputGroupFile01" name="image" multiple>
+</div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Product Description
+                            </label>
+                            <textarea
+                                name="description"
+                                class="form-control"
+                                rows="4"
+                                placeholder="Describe your product"
+                                required
+                            ></textarea>
+                        </div>
+
+                        <!-- Price and Stock -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">
+                                    Price (₹)
+                                </label>
+                                <input
+                                    type="number"
+                                    name="price"
+                                    class="form-control"
+                                    placeholder="Enter price"
+                                    min="0"
+                                    step="0.01"
+                                    required
+                                >
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">
+                                    Available Stock
+                                </label>
+                                <input
+                                    type="number"
+                                    name="stock"
+                                    class="form-control"
+                                    placeholder="Enter quantity"
+                                    min="0"
+                                    step="1"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Category -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">
+                                Product Category
+                            </label>
+
+                            <select name="category" class="form-select" required>
+                                <option value="">Select Category</option>
+                                <option value="Fashion">Fashion</option>
+                                <option value="Footwear">Footwear</option>
+                                <option value="Accessories">Accessories</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Grocery">Grocery</option>
+                                <option value="Books">Books</option>
+                                <option value="Home">Home</option>
+                                <option value="Others">Others</option>
+                            </select>
+                        </div>
+
+                        <!-- Availability -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                Product Availability
+                            </label>
+
+                            <select name="available" class="form-select" required>
+                                <option value="true">Available</option>
+                                <option value="false">Not Available</option>
+                            </select>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex gap-2">
+                            <button type="submit"
+                                class="btn btn-dark px-4">
+                                Add Product
+                            </button>
+
+                            <a href="/products"
+                                class="btn btn-outline-secondary px-4">
+                                Cancel
+                            </a>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

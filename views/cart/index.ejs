@@ -1,0 +1,302 @@
+
+<% layout('/layouts/boilerplate') %>
+
+<%
+    const validItems = cart?.items?.filter(item => item.product) || [];
+
+    const totalItems = validItems.reduce(
+        (sum, item) => sum + item.quantity, 0
+    );
+
+    const totalAmount = validItems.reduce(
+        (sum, item) => sum + item.product.price * item.quantity, 0
+    );
+%>
+
+<div class="container py-5">
+
+    <!-- Header -->
+    <div class="mb-4">
+        <h2 class="fw-bold mb-1">My Shopping Cart</h2>
+        <p class="text-muted">Review your selected products</p>
+    </div>
+
+    <% if (validItems.length === 0) { %>
+
+        <!-- Empty Cart -->
+        <div class="text-center py-5">
+
+            <i class="bi bi-cart-x display-1 text-muted"></i>
+
+            <h3 class="fw-bold mt-3">Your Cart is Empty!</h3>
+
+            <p class="text-muted">
+                Looks like you haven't added anything yet.
+            </p>
+
+            <a href="/products" class="btn btn-dark mt-3">
+                <i class="bi bi-arrow-left"></i>
+                Continue Shopping
+            </a>
+
+        </div>
+
+    <% } else { %>
+
+        <div class="row g-4">
+
+            <!-- Cart Products -->
+            <div class="col-lg-8">
+
+                <% validItems.forEach(item => { %>
+
+                    <div class="card border-0 shadow-sm mb-3 cart-card">
+
+                        <div class="card-body">
+
+                            <div class="row align-items-center g-3">
+
+                                <!-- Product Image -->
+                                <div class="col-4 col-md-3 text-center">
+
+                                    <img
+                                        src="<%= item.product.images?.[0]?.url || 'https://placehold.co/150' %>"
+                                        class="img-fluid cart-image"
+                                        alt="<%= item.product.name %>"
+                                    >
+
+                                </div>
+
+                                <!-- Product Details -->
+                                <div class="col-8 col-md-4">
+
+                                    <h5 class="fw-bold">
+                                        <%= item.product.name %>
+                                    </h5>
+
+                                    <p class="text-muted mb-1">
+                                        ₹<%= item.product.price.toLocaleString("en-IN") %>
+                                    </p>
+
+                                    <h6 class="text-success mb-0">
+                                        Subtotal:
+                                        ₹<%= (item.product.price * item.quantity).toLocaleString("en-IN") %>
+                                    </h6>
+
+                                </div>
+
+                                <!-- Quantity Controls -->
+                                <div class="col-7 col-md-3">
+
+                                    <p class="small text-muted mb-2">
+                                        Quantity
+                                    </p>
+
+                                    <div class="d-flex align-items-center gap-2">
+
+                                        <!-- Decrease -->
+                                        <form
+                                            action="/cart/<%= item.product._id %>?_method=PATCH"
+                                            method="POST"
+                                        >
+
+                                            <input
+                                                type="hidden"
+                                                name="quantity"
+                                                value="<%= item.quantity - 1 %>"
+                                            >
+
+                                            <button
+                                                class="btn btn-outline-dark btn-sm"
+                                                <%= item.quantity <= 1 ? 'disabled' : '' %>
+                                            >
+                                                <i class="bi bi-dash"></i>
+                                            </button>
+
+                                        </form>
+
+                                        <strong>
+                                            <%= item.quantity %>
+                                        </strong>
+
+                                        <!-- Increase -->
+                                        <form
+                                            action="/cart/<%= item.product._id %>?_method=PATCH"
+                                            method="POST"
+                                        >
+
+                                            <input
+                                                type="hidden"
+                                                name="quantity"
+                                                value="<%= item.quantity + 1 %>"
+                                            >
+
+                                            <button
+                                                class="btn btn-outline-dark btn-sm"
+                                                <%= item.quantity >= item.product.stock ? 'disabled' : '' %>
+                                            >
+                                                <i class="bi bi-plus"></i>
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                    <small class="text-muted">
+                                        Stock: <%= item.product.stock %>
+                                    </small>
+
+                                </div>
+
+                                <!-- Remove Button -->
+                                <div class="col-5 col-md-2 text-end">
+
+                                    <form
+                                        action="/cart/<%= item.product._id %>?_method=DELETE"
+                                        method="POST"
+                                    >
+
+                                        <button class="btn btn-outline-danger btn-sm">
+                                            <i class="bi bi-trash"></i>
+                                            <span class="d-none d-md-inline">
+                                                Remove
+                                            </span>
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                <% }) %>
+
+                <!-- Clear Cart -->
+                <form
+                    action="/cart?_method=DELETE"
+                    method="POST"
+                    class="text-end mt-3"
+                    onsubmit="return confirm('Are you sure you want to clear your cart?')"
+                >
+
+                    <button class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-trash"></i>
+                        Clear Cart
+                    </button>
+
+                </form>
+
+            </div>
+
+            <!-- Order Summary -->
+            <div class="col-lg-4">
+
+                <div class="card border-0 shadow-sm summary-card">
+
+                    <div class="card-body p-4">
+
+                        <h4 class="fw-bold mb-4">
+                            Order Summary
+                        </h4>
+
+                        <div class="d-flex justify-content-between mb-3">
+
+                            <span class="text-muted">Total Items</span>
+
+                            <strong><%= totalItems %></strong>
+
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-3">
+
+                            <span class="text-muted">Subtotal</span>
+
+                            <strong>
+                                ₹<%= totalAmount.toLocaleString("en-IN") %>
+                            </strong>
+
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-3">
+
+                            <span class="text-muted">Shipping</span>
+
+                            <span class="text-muted">At checkout</span>
+
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between mb-4">
+
+                            <h5 class="fw-bold">Total Amount</h5>
+
+                            <h5 class="fw-bold text-success">
+                                ₹<%= totalAmount.toLocaleString("en-IN") %>
+                            </h5>
+
+                        </div>
+
+                        <form action="/checkout" method="POST">
+
+                            <button
+                                type="submit"
+                                class="btn btn-dark w-100"
+                            >
+                                Proceed to Checkout
+                                <i class="bi bi-arrow-right"></i>
+                            </button>
+
+                        </form>
+
+                        <a
+                            href="/products"
+                            class="btn btn-outline-dark w-100 mt-2"
+                        >
+                            Continue Shopping
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    <% } %>
+
+</div>
+
+<style>
+
+    .cart-card {
+        border-radius: 12px;
+        overflow: hidden;
+        transition: box-shadow 0.2s ease;
+    }
+
+    .cart-card:hover {
+        box-shadow: 0 6px 18px rgba(0,0,0,0.1) !important;
+    }
+
+    .cart-image {
+        height: 120px;
+        width: 120px;
+        object-fit: contain;
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 8px;
+    }
+
+    .summary-card {
+        border-radius: 12px;
+        position: sticky;
+        top: 20px;
+    }
+
+</style>

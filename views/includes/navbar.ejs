@@ -1,0 +1,87 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
+    <div class="container">
+
+        <!-- Brand -->
+        <a class="navbar-brand fw-bold fs-4" href="/products">
+            Shop<span class="text-warning">Hub.</span>
+        </a>
+
+        <!-- Mobile Toggle -->
+        <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNavbar"
+            aria-controls="mainNavbar"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar Links -->
+        <div class="collapse navbar-collapse" id="mainNavbar">
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/products">Home</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/products">All Products</a>
+                </li>
+
+                <% if (currentUser && currentUser.role === "admin") { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/products/new">
+                            Add Product
+                        </a>
+                    </li>
+                <% } %>
+
+            </ul>
+
+            <!-- Right Side -->
+            <ul class="navbar-nav align-items-lg-center gap-lg-2">
+
+                <% if (!currentUser) { %>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register">Register</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="btn btn-warning btn-sm px-3 fw-semibold"
+                           href="/login">
+                            Login
+                        </a>
+                    </li>
+
+                <% } else { %>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cart">
+                            <i class="bi bi-cart3"></i> Cart
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <span class="nav-link text-light">
+                            Hi, <%= currentUser.username %>
+                        </span>
+                    </li>
+
+                    <li class="nav-item">
+                        <form action="/logout" method="POST">
+                            <button class="btn btn-outline-light btn-sm px-3"
+                                    type="submit">
+                                Logout
+                            </button>
+                        </form>
+                    </li>
+
+                <% } %>
+
+            </ul>
+
+        </div>
+    </div>
+</nav>
